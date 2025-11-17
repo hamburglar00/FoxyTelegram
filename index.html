@@ -14,23 +14,39 @@
   <script>
     function normEmail(v){return(v||"").trim().toLowerCase();}
     function normPhone(v){let p=(v||"").replace(/\D+/g,"");if(p&&p.length===10)p="54"+p;return p;}
-    function safeUUID(){return crypto?.randomUUID?.()||"xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g,c=>{const r=Math.random()*16|0,v=c==="x"?r:r&0x3|0x8;return v.toString(16)})}
-    function getOrCreateExternalId(){let id=localStorage.getItem("external_id");if(!id){id=safeUUID();localStorage.setItem("external_id",id);}return id;}
+    function safeUUID(){return crypto?.randomUUID?.()||
+      "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g,c=>{
+        const r=Math.random()*16|0,v=c==="x"?r:r&0x3|0x8;
+        return v.toString(16);
+      });
+    }
+    function getOrCreateExternalId(){
+      let id=localStorage.getItem("external_id");
+      if(!id){id=safeUUID();localStorage.setItem("external_id",id);}
+      return id;
+    }
+
     const params=new URLSearchParams(location.search);
     const userEmail=normEmail(params.get("email"));
     const userPhone=normPhone(params.get("phone"));
     const externalId=getOrCreateExternalId();
+
     !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-    n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
-    n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
-    t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script',
-    'https://connect.facebook.net/en_US/fbevents.js');
-    window.fbq=window.fbq||function(){console.warn("Meta Pixel no inicializado")};
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;
+    s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)
+    }(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
+
+    window.fbq=window.fbq||function(){console.warn("Pixel no inicializado")};
     fbq("init","1158870522806554",{external_id:externalId,em:userEmail||void 0,ph:userPhone||void 0,country:"AR"});
     fbq("track","PageView");
   </script>
-  <noscript><img height="1" width="1" style="display:none"
-    src="https://www.facebook.com/tr?id=1158870522806554&ev=PageView&noscript=1"/></noscript>
+
+  <noscript>
+    <img height="1" width="1" style="display:none"
+      src="https://www.facebook.com/tr?id=1158870522806554&ev=PageView&noscript=1"/>
+  </noscript>
 </head>
 
 <body>
@@ -39,24 +55,50 @@
     <div class="content">
       <img src="imagenes/logo.png" class="logo" alt="Logo Foxy"
            width="240" height="240" decoding="async" fetchpriority="high" />
+
       <p class="title">Envianos un WhatsApp<br />para crear tu usuario</p>
 
+      <!-- 🔵 BOTÓN TELEGRAM -->
       <a class="telegram-button" id="telegramButton" href="#" rel="noopener noreferrer" aria-label="Crear usuario por Telegram">
         <span>¡CREAR USUARIO POR TELEGRAM!</span>
-        <img src="imagenes/telegram.png" alt="telegram" class="telegram-icon"
-             width="24" height="24" decoding="async" loading="lazy" />
+        <img src="imagenes/telegram.png" class="telegram-icon" alt="telegram" width="24" height="24" />
       </a>
 
+      <!-- 🟢 BOTÓN WHATSAPP -->
       <a class="whatsapp-button" id="whatsappButton" href="#" rel="noopener noreferrer" aria-label="Crear usuario por WhatsApp">
         <span>¡CREAR USUARIO YA!</span>
-        <img src="imagenes/whatsapp.png" alt="whatsapp" class="whatsapp-icon"
-             width="24" height="24" decoding="async" loading="lazy" />
+        <img src="imagenes/whatsapp.png" class="whatsapp-icon" alt="whatsapp" width="24" height="24" />
       </a>
 
       <p class="subtitle">Mínimo de $1.000<br />Sin Máximo de Retiro<br />Ganás y cobrás a cualquier hora</p>
       <p class="description">-RED OFICIAL: FOXY-</p>
     </div>
   </div>
+
+<!-- ESTILOS DEL BOTÓN TELEGRAM -->
+<style>
+.telegram-button {
+  margin-top: 15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #2AABEE;
+  padding: 15px 22px;
+  border-radius: 12px;
+  font-size: 22px;
+  font-weight: bold;
+  color: white;
+  text-decoration: none;
+  cursor: pointer;
+  box-shadow: 0 0 15px rgba(42,171,238,0.7);
+  transition: transform .2s, box-shadow .2s;
+}
+.telegram-button:hover {
+  transform: scale(1.04);
+  box-shadow: 0 0 18px rgba(42,171,238,0.95);
+}
+.telegram-icon { margin-left: 10px; }
+</style>
 
 <script>
 /*************** CONFIGURACIÓN ***************/
@@ -69,14 +111,67 @@ const CONFIG_FRONT = {
   LANDING_TAG: "DW2"
 };
 
-/*************** FUNCIONES AUXILIARES ***************/
+/*************** UTILIDADES ***************/
 function fetchWithTimeout(url,opt={},ms=2000){
   const ctrl=new AbortController();const id=setTimeout(()=>ctrl.abort(),ms);
   return fetch(url,{...opt,signal:ctrl.signal}).finally(()=>clearTimeout(id));
 }
-function getCache(){try{return JSON.parse(localStorage.getItem(CONFIG_FRONT.LS_KEY)||"null");}catch{return null;}}
-function setCache(numbers){localStorage.setItem(CONFIG_FRONT.LS_KEY,JSON.stringify({ts:Date.now(),numbers}));}
-function normalizeNumbers(list){return(Array.isArray(list)?list:[]).map(n=>({number:String(n.number||n.phone||"").trim(),weight:Number(n.weight||1),name:n.name||"Diana"})).filter(n=>/^\+?\d{8,17}$/.test(n.number));}
+const qs=new URLSearchParams(location.search);
+const getQueryParam=p=>qs.get(p);
+const getCookie=name=>{
+  const m=document.cookie.match(new RegExp("(^| )"+name+"=([^;]+)"));return m&&m[2];
+};
+function getFbc(){
+  const c=getCookie("_fbc");
+  if(c){localStorage.setItem("stored_fbc",c);return c;}
+  const s=localStorage.getItem("stored_fbc");if(s)return s;
+  const fbclid=getQueryParam("fbclid");if(!fbclid)return;
+  const fbc=`fb.1.${Date.now()}.${fbclid}`;
+  localStorage.setItem("stored_fbc",fbc);return fbc;
+}
+function getFbp(){
+  const c=getCookie("_fbp");
+  if(c){localStorage.setItem("stored_fbp",c);return c;}
+  const s=localStorage.getItem("stored_fbp");if(s)return s;
+  const n=`fb.1.${Date.now()}.${Math.floor(Math.random()*1e10)}`;
+  localStorage.setItem("stored_fbp",n);return n;
+}
+function generateUUID(){
+  return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g,c=>{
+    const r=Math.random()*16|0,v=c==="x"?r:r&0x3|0x8;
+    return v.toString(16);
+  });
+}
+function getDeviceType(){
+  const ua=navigator.userAgent;
+  if(/mobile/i.test(ua))return"mobile";
+  if(/tablet|ipad|playbook|silk/i.test(ua))return"tablet";
+  return"desktop";
+}
+async function detectarGeo(timeoutMs=700){
+  try{
+    const ctrl=new AbortController();const t=setTimeout(()=>ctrl.abort(),timeoutMs);
+    const res=await fetch("https://ipapi.co/json/",{signal:ctrl.signal,cache:"no-store"});
+    clearTimeout(t);
+    const d=await res.json();
+    return{country:d.country,region:d.region,city:d.city};
+  }catch{
+    return{country:null,region:null,city:null};
+  }
+}
+
+/*************** CARGA DE NÚMEROS ***************/
+function getCache(){
+  try{return JSON.parse(localStorage.getItem(CONFIG_FRONT.LS_KEY)||"null");}catch{return null;}
+}
+function setCache(numbers){
+  localStorage.setItem(CONFIG_FRONT.LS_KEY,JSON.stringify({ts:Date.now(),numbers}));
+}
+function normalizeNumbers(list){
+  return(Array.isArray(list)?list:[])
+    .map(n=>({number:String(n.number||n.phone||"").trim(),weight:Number(n.weight||1),name:n.name||"Diana"}))
+    .filter(n=>/^\+?\d{8,17}$/.test(n.number));
+}
 async function loadNumbersOnce(){
   const cached=getCache();
   try{
@@ -85,8 +180,8 @@ async function loadNumbersOnce(){
     const data=await res.json();
     const list=normalizeNumbers(Array.isArray(data)?data:[data]);
     if(list.length){setCache(list);return list;}
-    throw new Error("Invalid data");
-  }catch(e){
+    throw new Error("Invalid");
+  }catch{
     const ok=cached?.numbers?.length&&Date.now()-(cached.ts||0)<CONFIG_FRONT.TTL_MS;
     return ok?cached.numbers:CONFIG_FRONT.FALLBACK;
   }
@@ -94,116 +189,161 @@ async function loadNumbersOnce(){
 function pickWeightedRandom(list){
   const total=list.reduce((s,it)=>s+(Number(it.weight)||1),0);
   let r=Math.random()*total;
-  for(const it of list){r-=(Number(it.weight)||1);if(r<=0)return it;}
+  for(const it of list){
+    r-=Number(it.weight||1);
+    if(r<=0)return it;
+  }
   return list[list.length-1];
 }
 
-/*************** FUNCIONES CAPI Y GEO ***************/
-const qs=new URLSearchParams(location.search);
-const getQueryParam=p=>qs.get(p);
-const getCookie=name=>{const m=document.cookie.match(new RegExp("(^| )"+name+"=([^;]+)"));return m&&m[2];};
-function getFbc(){const c=getCookie("_fbc");if(c){localStorage.setItem("stored_fbc",c);return c;}
-  const s=localStorage.getItem("stored_fbc");if(s)return s;const fbclid=getQueryParam("fbclid");
-  if(!fbclid)return;const fbc=`fb.1.${Date.now()}.${fbclid}`;localStorage.setItem("stored_fbc",fbc);return fbc;}
-function getFbp(){const c=getCookie("_fbp");if(c){localStorage.setItem("stored_fbp",c);return c;}
-  const s=localStorage.getItem("stored_fbp");if(s)return s;const n=`fb.1.${Date.now()}.${Math.floor(Math.random()*1e10)}`;
-  localStorage.setItem("stored_fbp",n);return n;}
-function generateUUID(){return"xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g,c=>{const r=Math.random()*16|0,v=c==="x"?r:r&0x3|0x8;return v.toString(16)})}
-function getDeviceType(){const ua=navigator.userAgent;if(/mobile/i.test(ua))return"mobile";if(/tablet|ipad|playbook|silk/i.test(ua))return"tablet";return"desktop";}
-async function detectarGeo(timeoutMs=700){try{const ctrl=new AbortController();const t=setTimeout(()=>ctrl.abort(),timeoutMs);
-  const res=await fetch("https://ipapi.co/json/",{signal:ctrl.signal,cache:"no-store"});clearTimeout(t);const d=await res.json();
-  return{country:d.country||null,region:d.region||null,city:d.city||null};}catch{return{country:null,region:null,city:null};}}
-
 /*************** PRINCIPAL ***************/
 document.addEventListener("DOMContentLoaded",()=>{
+
+  /**************************************
+   🔵 BOTÓN TELEGRAM con tracking FULL
+  **************************************/
+  const tg=document.getElementById("telegramButton");
+
+  tg.addEventListener("click",async e=>{
+    e.preventDefault();
+
+    // 🔹 Telegram username (cambiar)
+    const tgUser="FoxyCasinoBot";
+
+    // 🔹 No depende de números dinámicos
+    const assigned="TELEGRAM";
+
+    const event_id=generateUUID();
+    const external_id=getOrCreateExternalId();
+    const event_source_url=location.href;
+    const fbp=getFbp();
+    const fbc=getFbc();
+    const uuidSegment=generateUUID().replace(/-/g,"").slice(0,12);
+    const promo_code=CONFIG_FRONT.ENVIAR_PROMO_CODE?`${CONFIG_FRONT.LANDING_TAG}-${uuidSegment}`:"";
+
+    if(window.fbq){
+      fbq("track","Contact",{
+        content_name:"Botón Telegram",
+        content_category:"LeadGen",
+        event_source:"Landing DianaWin"
+      });
+    }
+
+    detectarGeo().then(geo=>{
+      const payload={
+        event_name:"Contact_Telegram",
+        event_id,
+        external_id,
+        event_source_url,
+        fbp,
+        fbc,
+        email:getQueryParam("email"),
+        phone:getQueryParam("phone"),
+        fn:getQueryParam("fn"),
+        ln:getQueryParam("ln"),
+        ct:getQueryParam("ct"),
+        st:getQueryParam("st"),
+        zip:getQueryParam("zip"),
+        country:getQueryParam("country"),
+        geo_city:geo.city,
+        geo_region:geo.region,
+        geo_country:geo.country,
+        utm_campaign:getQueryParam("utm_campaign"),
+        telefono_asignado:assigned,
+        device_type:getDeviceType(),
+        promo_code
+      };
+
+      fetch("/api/xz3v2q",{
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify(payload),
+        keepalive:true
+      }).catch(console.error);
+    });
+
+    // abrir telegram
+    setTimeout(()=>{
+      window.open(`https://t.me/${tgUser}`,"_blank","noopener");
+    },200);
+
+  });
+
+
+
+  /**************************************
+   🟢 BOTÓN WHATSAPP (igual que antes)
+  **************************************/
   const btn=document.getElementById("whatsappButton");
-  if(!btn)return;
   let waInFlight=false,activeNumbers=[];
   loadNumbersOnce().then(list=>activeNumbers=list);
 
   btn.addEventListener("click",async e=>{
     e.preventDefault();if(waInFlight)return;waInFlight=true;
+
     const {number:telefono,name:botName}=activeNumbers.length?pickWeightedRandom(activeNumbers):CONFIG_FRONT.FALLBACK[0];
-    const cleanPhone = telefono.replace("+","").trim();
-    const external_id=getOrCreateExternalId(),event_id=generateUUID(),event_source_url=location.href,fbp=getFbp(),fbc=getFbc();
+    const cleanPhone=telefono.replace("+","").trim();
+    const external_id=getOrCreateExternalId();
+    const event_id=generateUUID();
+    const event_source_url=location.href;
+    const fbp=getFbp();
+    const fbc=getFbc();
     const uuidSegment=generateUUID().replace(/-/g,"").slice(0,12);
     const promo_code=CONFIG_FRONT.ENVIAR_PROMO_CODE?`${CONFIG_FRONT.LANDING_TAG}-${uuidSegment}`:"";
 
-    const variantes = [
-      n => `Hola ${n}! Vi este anuncio, me pasás info?`,
-      n => `Hola ${n}! Vi el anuncio, podrías darme más info?`,
-      n => `Buenas ${n}! Me contás un poco más del anuncio?`,
-      n => `Hola ${n}! Quisiera saber más sobre lo que ofrecen.`,
-      n => `Buenas ${n}! Me das más detalles por favor?`,
-      n => `Hola ${n}! Estoy interesado, me contás cómo funciona?`,
-      n => `Hola ${n}! Vi tu publicación, podrías ampliarme la info?`,
-      n => `Holaaa ${n}! Me llamó la atención el anuncio, me contás más?`,
-      n => `Hola ${n}! Vi tu publicidad, cómo es para registrarse?`,
-      n => `Buenas ${n}! Me das información sobre cómo empezar?`,
-      n => `Qué tal ${n}! Me podés explicar cómo funciona?`,
-      n => `Hola ${n}! Quisiera saber cómo se juega, me ayudás?`,
-      n => `Holaaa ${n}! Vi el anuncio, me pasás los pasos para entrar?`,
-      n => `Buenas ${n}! Me interesa, me contás un poco más?`,
-      n => `Hola ${n}! Vi su anuncio, tienen bono de bienvenida?`,
-      n => `Holaaa ${n}! Me podés contar un poco más del sistema?`,
-      n => `Buenas ${n}! Vi la publicidad y quiero saber más.`,
-      n => `Hola ${n}! Cómo hago para crear mi usuario?`,
-      n => `Holaaa ${n}! Me gustaría probar, cómo empiezo?`,
-      n => `Buenas ${n}! Me interesa, cómo funciona la plataforma?`,
-      n => `Hola ${n}! Me pasás info sobre cómo registrarme?`,
-      n => `Holaaa ${n}! Me contás más sobre lo que ofrecen?`,
-      n => `Buenas ${n}! Vi su anuncio, me explicás cómo participar?`,
-      n => `Hola ${n}! Vi este anuncio y quiero saber cómo funciona.`,
-      n => `Holaaa ${n}! Me podrías dar más información?`,
-      n => `Buenas ${n}! Estoy interesado, me pasás más detalles?`,
-      n => `Hola ${n}! Vi el anuncio y quiero saber cómo se juega.`,
-      n => `Holaaa ${n}! Vi la publi, me contás de qué trata?`,
-      n => `Buenas ${n}! Quiero saber más sobre el servicio que ofrecen.`,
-      n => `Hola ${n}! Podés darme más info sobre cómo arrancar?`,
-      n => `Holaaa ${n}! Me explicás cómo funciona el proceso?`,
-      n => `Buenas ${n}! Me interesa participar, me contás cómo es?`,
-      n => `Hola ${n}! Vi la publicidad, me das más detalles?`,
-      n => `Holaaa ${n}! Quisiera saber cómo puedo registrarme.`,
-      n => `Buenas ${n}! Vi el anuncio y quiero empezar, cómo hago?`,
-      n => `Hola ${n}! Estoy interesado en más información.`,
-      n => `Holaaa ${n}! Me contás cómo es el tema del registro?`,
-      n => `Buenas ${n}! Vi la publicación y me gustaría saber más.`,
-      n => `Hola ${n}! Me explicás cómo se gana o cómo funciona?`,
-      n => `Holaaa ${n}! Me gustaría saber más antes de registrarme.`,
-      n => `Buenas ${n}! Vi el anuncio y quiero info para empezar.`,
-      n => `Hola ${n}! Podés contarme cómo es el proceso paso a paso?`,
-      n => `Holaaa ${n}! Vi su publicidad, me gustaría más info.`,
-      n => `Buenas ${n}! Me interesa, tienen algún bono de registro?`,
-      n => `Hola ${n}! Cómo hago para jugar o participar?`,
-      n => `Holaaa ${n}! Me podés dar más info por favor?`,
-      n => `Buenas ${n}! Vi su anuncio, me gustaría probar.`,
-      n => `Hola ${n}! Vi la publicación y quiero saber más detalles.`,
-      n => `Holaaa ${n}! Me interesa lo que ofrecen, cómo empiezo?`
+    const variantes=[
+      n=>`Hola ${n}! Vi este anuncio, me pasás info?`,
+      n=>`Hola ${n}! Vi el anuncio, podrías darme más info?`,
+      n=>`Buenas ${n}! Me contás un poco más del anuncio?`
     ];
-
-
     const base=variantes[Math.floor(Math.random()*variantes.length)](botName);
     const mensaje=promo_code?`${base} ${promo_code}`:base;
 
     if(window.fbq){
-      fbq("track","Contact",{content_name:"Botón WhatsApp",content_category:"LeadGen",event_source:"Landing DianaWin"});
+      fbq("track","Contact",{content_name:"Botón WhatsApp",content_category:"LeadGen"});
     }
 
-    setTimeout(()=>{window.open(`https://wa.me/${cleanPhone}?text=${encodeURIComponent(mensaje)}`,"_blank","noopener");},200);
+    setTimeout(()=>{
+      window.open(`https://wa.me/${cleanPhone}?text=${encodeURIComponent(mensaje)}`,"_blank","noopener");
+    },200);
 
     detectarGeo().then(geo=>{
-      const payload={event_name:"Contact",event_id,external_id,event_source_url,fbp,fbc,
-        email:getQueryParam("email"),phone:getQueryParam("phone"),fn:getQueryParam("fn"),
-        ln:getQueryParam("ln"),ct:getQueryParam("ct"),st:getQueryParam("st"),
-        zip:getQueryParam("zip"),country:getQueryParam("country"),
-        geo_city:geo.city,geo_region:geo.region,geo_country:geo.country,
-        utm_campaign:getQueryParam("utm_campaign"),telefono_asignado:cleanPhone,
-        device_type:getDeviceType(),promo_code};
-      fetch("/api/xz3v2q",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(payload),keepalive:true})
-      .catch(console.error).finally(()=>{setTimeout(()=>{waInFlight=false;},800)});
+      const payload={
+        event_name:"Contact",
+        event_id,
+        external_id,
+        event_source_url,
+        fbp,
+        fbc,
+        email:getQueryParam("email"),
+        phone:getQueryParam("phone"),
+        fn:getQueryParam("fn"),
+        ln:getQueryParam("ln"),
+        ct:getQueryParam("ct"),
+        st:getQueryParam("st"),
+        zip:getQueryParam("zip"),
+        country:getQueryParam("country"),
+        geo_city:geo.city,
+        geo_region:geo.region,
+        geo_country:geo.country,
+        utm_campaign:getQueryParam("utm_campaign"),
+        telefono_asignado:cleanPhone,
+        device_type:getDeviceType(),
+        promo_code
+      };
+
+      fetch("/api/xz3v2q",{
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify(payload),
+        keepalive:true
+      })
+      .finally(()=>setTimeout(()=>waInFlight=false,800));
     });
   });
+
 });
 </script>
+
 </body>
 </html>
