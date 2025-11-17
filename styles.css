@@ -1,23 +1,23 @@
-/* Reset liviano y fuente del sistema */
-* { margin: 0; padding: 0; box-sizing: border-box; }
+/* =======================
+   RESET Y BASE
+======================= */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 body {
   font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, Helvetica, sans-serif;
   color: #fff;
   background-color: #000;
 }
 
-/* Hero de fondo
-   - Si querés preservar el “tile” horizontal, quedate con tu repeat-x.
-   - Para mejor LCP/menos repaints, conviene cover + no-repeat. */
+/* =======================
+   FONDO HERO
+======================= */
 .background-image {
-  /* Opción LCP-friendly: */
   background: #000 url("imagenes/fondo.png") center / cover no-repeat;
-  /* Si preferís tu efecto original: 
-     background-image: url("imagenes/fondo.png");
-     background-size: auto 100%;
-     background-repeat: repeat-x;
-     background-position: top center;
-  */
   width: 100%;
   min-height: 100vh;
   display: flex;
@@ -40,106 +40,23 @@ body {
   align-items: center;
 }
 
-/* Dimensiones explícitas para evitar CLS */
+/* =======================
+   LOGO
+======================= */
 .logo {
-  width: 250px;
-  height: 150px;
-  aspect-ratio: 1 / 1;
+  width: 240px;
+  height: 240px;
+  object-fit: contain;
 }
 
+/* =======================
+   TEXTOS
+======================= */
 .title {
-  margin: 10px 0 15px;
+  margin: 10px 0 20px;
   font-size: 22px;
   font-weight: 700;
-  color: #fff;
 }
-
-/* Botón: animaciones GPU-friendly (transform/opacity) */
-.whatsapp-button {
-  position: relative;
-  overflow: hidden;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
-  background: linear-gradient(145deg, #155c3d, #0e2d1e);
-  color: #fff;
-  font-size: 18px;   /* antes 24px */
-  font-weight: 700;
-  padding: 12px 16px;/* antes 20px */
-  border: 3px solid #fff;
-  border-radius: 8px;/* antes 10px (opcional) */
-  text-decoration: none;
-  margin-top: 25px;
-  gap: 8px;          /* antes 10px */
-  min-width: 180px;  /* antes 250px */
-  /* Sombra estática (no animarla: costosa) */
-  box-shadow: 0 0 30px 8px #8b00ff, inset 0 1px 0 #ffffff33, 0 0 12px 2px #5a00b599;
-  /* Solo animaciones composited */
-  animation: heartbeat 2s infinite ease-in-out;
-  transition: transform 0.3s ease-in-out;
-  will-change: transform;
-}
-
-/* Brillo animado usando transform (mejor que animar "left") */
-.whatsapp-button::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;           /* punto de partida */
-  width: 50%;
-  height: 100%;
-  background: linear-gradient(120deg, transparent, rgba(255,255,255,0.6), transparent);
-  transform: translateX(-150%) skewX(-25deg);
-  animation: shineX 3.5s infinite;
-  pointer-events: none;
-  will-change: transform;
-}
-
-@keyframes shineX {
-  0%   { transform: translateX(-150%) skewX(-25deg); }
-  100% { transform: translateX(300%) skewX(-25deg); }
-}
-
-/* Heartbeat: evitamos animar box-shadow; solo escala (GPU) */
-@keyframes heartbeat {
-  0%, 100% { transform: scale(1); }
-  50%      { transform: scale(1.03); }
-}
-
-.whatsapp-icon {
-  width: 30px;
-  height: 30px;
-}
-
-.telegram-button {
-  margin-top: 15px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: #2AABEE; /* color Telegram */
-  padding: 15px 22px;
-  border-radius: 12px;
-  font-size: 22px;
-  font-weight: bold;
-  color: #ffffff;
-  text-decoration: none;
-  cursor: pointer;
-  box-shadow: 0 0 15px rgba(42, 171, 238, 0.7);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.telegram-button:hover {
-  transform: scale(1.04);
-  box-shadow: 0 0 18px rgba(42, 171, 238, 0.95);
-}
-
-.telegram-icon {
-  width: 26px;
-  height: 26px;
-  margin-left: 10px;
-}
-
 
 .subtitle {
   font-size: 19px;
@@ -154,9 +71,72 @@ body {
   margin: 35px 0 50px;
 }
 
-/* Respeto por usuarios con motion reducido */
+/* =======================
+   BOTONES (WHATSAPP & TELEGRAM)
+   — idéntico estilo
+======================= */
+
+.whatsapp-button,
+.telegram-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+
+  /* tamaño */
+  padding: 15px 22px;
+  min-width: 260px;
+  border-radius: 12px;
+
+  /* tipografía */
+  font-size: 22px;
+  font-weight: 700;
+  text-decoration: none;
+  color: white;
+
+  /* no bordes visibles */
+  border: none;
+
+  /* sombras PRO */
+  box-shadow: 0 0 18px rgba(255,255,255,0.15);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+
+/* COLOR DE FONDO DE CADA UNO */
+.whatsapp-button {
+  background-color: #25D366; /* verde WhatsApp */
+}
+
+.telegram-button {
+  background-color: #2AABEE; /* celeste Telegram */
+  margin-bottom: 15px; /* separarlo del WhatsApp */
+}
+
+/* HOVER */
+.whatsapp-button:hover,
+.telegram-button:hover {
+  transform: scale(1.04);
+  box-shadow: 0 0 22px rgba(255,255,255,0.3);
+}
+
+/* ICONOS */
+.whatsapp-icon,
+.telegram-icon {
+  width: 26px;
+  height: 26px;
+}
+
+/* =======================
+   PREFERENCIA ACCESIBLE
+======================= */
 @media (prefers-reduced-motion: reduce) {
   .whatsapp-button,
-  .whatsapp-button::before { animation: none !important; }
-  .whatsapp-button { transition: none; }
+  .telegram-button {
+    transition: none !important;
+    transform: none !important;
+  }
 }
