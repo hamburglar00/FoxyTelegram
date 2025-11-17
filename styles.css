@@ -211,6 +211,17 @@ body {
   height: 28px;
 }
 
+/* TÍTULO en color morado */
+.title {
+  color: #b34bff !important;
+}
+
+/* -RED OFICIAL: FOXY- en color morado */
+.description {
+  color: #b34bff !important;
+}
+
+
 /* REDUCED MOTION */
 @media (prefers-reduced-motion: reduce) {
   .whatsapp-button,
