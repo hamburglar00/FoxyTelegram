@@ -112,6 +112,35 @@ body {
   height: 30px;
 }
 
+.telegram-button {
+  margin-top: 15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #2AABEE; /* color Telegram */
+  padding: 15px 22px;
+  border-radius: 12px;
+  font-size: 22px;
+  font-weight: bold;
+  color: #ffffff;
+  text-decoration: none;
+  cursor: pointer;
+  box-shadow: 0 0 15px rgba(42, 171, 238, 0.7);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.telegram-button:hover {
+  transform: scale(1.04);
+  box-shadow: 0 0 18px rgba(42, 171, 238, 0.95);
+}
+
+.telegram-icon {
+  width: 26px;
+  height: 26px;
+  margin-left: 10px;
+}
+
+
 .subtitle {
   font-size: 19px;
   margin-top: 40px;
