@@ -11,9 +11,9 @@ body {
   background-color: #000;
 }
 
-/* ---------------------------------
+/* ------------------------------
    FONDO / OVERLAY / CONTENEDOR
----------------------------------- */
+------------------------------ */
 .background-image {
   background: #000 url("imagenes/fondo.png") center / cover no-repeat;
   width: 100%;
@@ -38,14 +38,18 @@ body {
   align-items: center;
 }
 
-/* LOGO */
+/* ------------------------------
+   LOGO
+------------------------------ */
 .logo {
   width: 240px;
   height: 240px;
   object-fit: contain;
 }
 
-/* TEXTOS */
+/* ------------------------------
+   TEXTOS PRINCIPALES
+------------------------------ */
 .title {
   margin: 15px 0 20px;
   font-size: 22px;
@@ -64,120 +68,145 @@ body {
   margin: 35px 0 50px;
 }
 
+/* ------------------------------
+   TEXTOS INFORMACIÓN
+------------------------------ */
 .info-telegram,
 .info-whatsapp {
   font-size: 16px;
-  color: #fff;
+  color: #ffffff;
   margin: 15px 0 10px;
   font-weight: 500;
   text-shadow: 0 0 8px rgba(0,0,0,0.7);
   line-height: 1.35;
 }
 
-.info-telegram { margin-top: 25px; }
-.info-whatsapp { margin-top: 18px; }
+.info-telegram {
+  margin-top: 25px;
+}
 
-/* ===================================================
-   BASE DE BOTONES — COMPACTOS, IGUALES, CENTRADOS
-=================================================== */
+.info-whatsapp {
+  margin-top: 18px;
+}
 
-.button-base {
-  display: inline-flex;
+/* ------------------------------
+   BOTÓN TELEGRAM
+------------------------------ */
+.telegram-button {
+  margin-top: 15px;
+  display: flex;
   justify-content: center;
   align-items: center;
 
-  padding: 10px 18px;          /* compacto */
-  min-width: 240px;            /* tamaño agradable */
-  max-width: 300px;            /* NO ocupa ancho completo */
-  height: 52px;                /* misma altura exacta */
+  background-color: #2AABEE;
+
+  padding: 15px 22px;
+  min-width: 260px;
 
   border-radius: 12px;
-  font-size: 19px;
-  font-weight: 700;
+  font-size: 22px;
+  font-weight: bold;
+  color: white;
   text-decoration: none;
-  color: #fff;
 
   cursor: pointer;
-  transition: transform .2s, box-shadow .2s;
+  box-shadow: 0 0 15px rgba(42,171,238,0.7);
 
   position: relative;
   overflow: hidden;
-}
 
-/* ---------------------------------
-   BOTÓN TELEGRAM
----------------------------------- */
-.telegram-button {
-  background-color: #2AABEE;
-  box-shadow: 0 0 12px rgba(42,171,238,0.7);
+  /* transición normal */
+  transition: transform .2s, box-shadow .2s;
 
+  /* ♥️ efecto latido */
   animation: tgHeartbeat 2.2s infinite ease-in-out;
 }
 
-.telegram-button:hover {
-  transform: scale(1.05);
-  box-shadow: 0 0 18px rgba(42,171,238,1);
-}
-
+/* ICONO */
 .telegram-icon {
-  width: 22px;
-  height: 22px;
-  margin-left: 8px;
+  margin-left: 10px;
+  width: 26px;
+  height: 26px;
 }
 
-/* BRILLO */
+/* Hover normal */
+.telegram-button:hover {
+  transform: scale(1.06);
+  box-shadow: 0 0 22px rgba(42,171,238,1);
+}
+
+/* ⭐ BRILLO QUE RECORRE */
 .telegram-button::before {
   content: "";
   position: absolute;
   top: 0;
-  left: -160%;
-  width: 60%;
+  left: -150%;
+  width: 50%;
   height: 100%;
   background: linear-gradient(
     120deg,
     transparent,
-    rgba(255,255,255,0.9),
+    rgba(255,255,255,0.7),
     transparent
   );
   transform: skewX(-25deg);
-  animation: tgShine 3s infinite;
+  animation: tgShine 3.5s infinite;
+  pointer-events: none;
 }
 
-@keyframes tgShine {
-  0%   { left: -160%; }
-  100% { left: 220%; }
-}
-
-/* LATIDO */
+/* ♥ ANIMACIÓN LATIDO */
 @keyframes tgHeartbeat {
   0%, 100% { transform: scale(1); }
   50%      { transform: scale(1.045); }
 }
 
-/* ---------------------------------
-   BOTÓN WHATSAPP
----------------------------------- */
+/* ✨ ANIMACIÓN DEL BRILLO */
+@keyframes tgShine {
+  0%   { left: -150%; }
+  100% { left: 200%; }
+}
+
+
+/* ------------------------------
+   BOTÓN WHATSAPP — estilo simple clásico
+------------------------------ */
 .whatsapp-button {
+  margin-top: 15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
   background-color: #25D366;
-  box-shadow: 0 0 12px rgba(0,0,0,0.45);
+
+  padding: 15px 22px;
+  min-width: 260px;
+
+  border-radius: 12px;
+  font-size: 22px;
+  font-weight: bold;
+  color: white;
+  text-decoration: none;
+
+  cursor: pointer;
+  box-shadow: 0 0 15px rgba(0,0,0,0.4);
+  transition: transform .2s, box-shadow .2s;
 }
 
 .whatsapp-button:hover {
-  transform: scale(1.05);
+  transform: scale(1.04);
   box-shadow: 0 0 18px rgba(0,0,0,0.65);
 }
 
 .whatsapp-icon {
-  width: 22px;
-  height: 22px;
-  margin-left: 8px;
+  margin-left: 10px;
+  width: 28px;
+  height: 28px;
 }
 
 /* REDUCED MOTION */
 @media (prefers-reduced-motion: reduce) {
-  .telegram-button,
-  .whatsapp-button {
-    animation: none !important;
+  .whatsapp-button,
+  .telegram-button {
     transition: none !important;
   }
 }
