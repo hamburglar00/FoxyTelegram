@@ -111,19 +111,61 @@ body {
 
   cursor: pointer;
   box-shadow: 0 0 15px rgba(42,171,238,0.7);
+
+  position: relative;
+  overflow: hidden;
+
+  /* transición normal */
   transition: transform .2s, box-shadow .2s;
+
+  /* ♥️ efecto latido */
+  animation: tgHeartbeat 2.2s infinite ease-in-out;
 }
 
-.telegram-button:hover {
-  transform: scale(1.04);
-  box-shadow: 0 0 18px rgba(42,171,238,0.95);
-}
-
+/* ICONO */
 .telegram-icon {
   margin-left: 10px;
   width: 26px;
   height: 26px;
 }
+
+/* Hover normal */
+.telegram-button:hover {
+  transform: scale(1.06);
+  box-shadow: 0 0 22px rgba(42,171,238,1);
+}
+
+/* ⭐ BRILLO QUE RECORRE */
+.telegram-button::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -150%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    120deg,
+    transparent,
+    rgba(255,255,255,0.7),
+    transparent
+  );
+  transform: skewX(-25deg);
+  animation: tgShine 3.5s infinite;
+  pointer-events: none;
+}
+
+/* ♥ ANIMACIÓN LATIDO */
+@keyframes tgHeartbeat {
+  0%, 100% { transform: scale(1); }
+  50%      { transform: scale(1.045); }
+}
+
+/* ✨ ANIMACIÓN DEL BRILLO */
+@keyframes tgShine {
+  0%   { left: -150%; }
+  100% { left: 200%; }
+}
+
 
 /* ------------------------------
    BOTÓN WHATSAPP — estilo simple clásico
