@@ -28,7 +28,7 @@ export default async function handler(req, res) {
     // ✅ Enviamos el número activo con el nombre "DIANA"
     return res.status(200).json({
       number: phone,
-      name: "DIANA",
+      name: "FOXY",
       weight: 1,
     });
   } catch (err) {
