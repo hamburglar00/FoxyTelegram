@@ -12,39 +12,29 @@
   <link rel="dns-prefetch" href="//connect.facebook.net">
   <link rel="preload" href="imagenes/fondo.png" as="image">
 
-  <!-- Meta Pixel Code -->
+ <!-- Meta Pixel Code (con coincidencias avanzadas) -->
   <script>
     function normEmail(v){return(v||"").trim().toLowerCase();}
     function normPhone(v){let p=(v||"").replace(/\D+/g,"");if(p&&p.length===10)p="54"+p;return p;}
-    function safeUUID(){return crypto?.randomUUID?.()||
-      "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g,c=>{
-        const r=Math.random()*16|0,v=c==="x"?r:r&0x3|0x8;
-        return v.toString(16);
-      });
-    }
-    function getOrCreateExternalId(){
-      let id=localStorage.getItem("external_id");
-      if(!id){id=safeUUID();localStorage.setItem("external_id",id);}
-      return id;
-    }
-
+    function safeUUID(){return crypto?.randomUUID?.()||"xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g,c=>{const r=Math.random()*16|0,v=c==="x"?r:r&0x3|0x8;return v.toString(16)})}
+    function getOrCreateExternalId(){let id=localStorage.getItem("external_id");if(!id){id=safeUUID();localStorage.setItem("external_id",id);}return id;}
     const params=new URLSearchParams(location.search);
     const userEmail=normEmail(params.get("email"));
     const userPhone=normPhone(params.get("phone"));
     const externalId=getOrCreateExternalId();
-
     !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
-    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
-    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-    n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;
-    s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)
-    }(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
-
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+    n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    window.fbq=window.fbq||function(){console.warn("Meta Pixel no inicializado")};
     fbq("init","TU_PIXEL_ID",{external_id:externalId,em:userEmail||void 0,ph:userPhone||void 0,country:"AR"});
     fbq("track","PageView");
   </script>
+  <noscript><img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=TU_PIXEL_ID&ev=PageView&noscript=1"/></noscript>
+  
 </head>
-
 <body>
   <div class="container background-image">
     <div class="overlay"></div>
