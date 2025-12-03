@@ -1,7 +1,7 @@
 // /api/get-random-phone.js
 export default async function handler(req, res) {
   try {
-    const AGENCY_ID = 1;
+    const AGENCY_ID = 16;
     const API_URL = `https://api.foxyadminbot.info/api/v1/agency/${AGENCY_ID}/random-phone`;
 
     const response = await fetch(API_URL, {
@@ -33,9 +33,9 @@ export default async function handler(req, res) {
     });
   } catch (err) {
     console.error("❌ Error al obtener número:", err.message);
-    // Fallback automático (Soporte Diana)
+    // Fallback automático (Soporte Foxy)
     return res.status(200).json({
-      number: "549351",
+      number: "5493513772572",
       name: "Foxy",
       weight: 1,
     });
